@@ -1,12 +1,15 @@
 # load git
 & "$env:LOCALAPPDATA\GitHub\shell.ps1"
 
-$psISE.Options.FontSize = 10
+$env:Path += ";$env:ProgramFiles\Oracle\VirtualBox"
 
-$host.PrivateData.ErrorBackgroundColor = "red"
-$host.PrivateData.ErrorForegroundColor = "white"
+# golang
+$workspace="$HOME\Gopath"
+$env:GOPATH = $workspace
+$env:Path = "C:\Go\bin;" + $env:Path
 
-$env:Path += ";C:\Scripts"
+# PATH: PowerShell Scripts
+$env:Path = "C:\Scripts;" + $env:Path
 Set-Location "C:\Scripts"
 
 $transcript_path = Join-Path (Get-Item $PROFILE).DirectoryName "Transcript"
