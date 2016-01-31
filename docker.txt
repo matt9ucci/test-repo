@@ -1,6 +1,0 @@
-which wget
-wget -qO- https://get.docker.com/ | sh
-service --status-all
-
-# Create the docker group and add a user
-sudo usermod -aG docker matt
