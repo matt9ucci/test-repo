@@ -1,16 +1,23 @@
 # load git
 & "$env:LOCALAPPDATA\GitHub\shell.ps1"
 
-$env:Path += ";$env:ProgramFiles\Oracle\VirtualBox"
+# env
+$env:GOPATH = "$HOME\Gopath"
 
-# golang
-$workspace="$HOME\Gopath"
-$env:GOPATH = $workspace
-$env:Path = "C:\Go\bin;" + $env:Path
+# PATH
+$private:envPath = @(
+    "C:\Scripts"
+    "$env:USERPROFILE\OneDrive\Scripts"
+    "C:\Go\bin"
+    "$env:ProgramFiles\Oracle\VirtualBox"
+    $env:Path
+)
+$env:Path = $envPath -join ";"
 
-# PATH: PowerShell Scripts
-$env:Path = "C:\Scripts;" + $env:Path
-Set-Location "C:\Scripts"
+# Alias
+sal gh Get-Help
+
+sl C:\Scripts
 
 $transcript_path = Join-Path (Get-Item $PROFILE).DirectoryName "Transcript"
 # clear small transcripts
