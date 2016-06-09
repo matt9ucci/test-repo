@@ -1,14 +1,15 @@
-# load git
+﻿# load git
 & "$env:LOCALAPPDATA\GitHub\shell.ps1"
 
 # env
+$env:GOROOT = "C:\Go\1.6.2"
 $env:GOPATH = "$HOME\Gopath"
 
 # PATH
 $private:envPath = @(
     "C:\Scripts"
     "$env:USERPROFILE\OneDrive\Scripts"
-    "C:\Go\bin"
+    "$env:GOROOT\bin"
     "$env:ProgramFiles\Oracle\VirtualBox"
     $env:Path
 )
@@ -17,9 +18,12 @@ $env:Path = $envPath -join ";"
 # Alias
 sal gh Get-Help
 
-sl C:\Scripts
+function prompt {
+    $Host.UI.RawUI.WindowTitle = "PS $($executionContext.SessionState.Path.CurrentLocation)$('>' * ($nestedPromptLevel + 1)) "
+    return "PS> "
+    # .Link
+    # http://go.microsoft.com/fwlink/?LinkID=225750
+    # .ExternalHelp System.Management.Automation.dll-help.xml
+}
 
-$transcript_path = Join-Path (Get-Item $PROFILE).DirectoryName "Transcript"
-# clear small transcripts
-Get-ChildItem $transcript_path | ? length -lt 3kb | Remove-Item
-Start-Transcript -OutputDirectory $transcript_path
+sl C:\Scripts
