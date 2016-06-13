@@ -1,24 +1,21 @@
-﻿# load git
+﻿# posh-git
 . "$env:LOCALAPPDATA\GitHub\shell.ps1"
 
-gci "$PSScriptRoot\Modules" -Filter *.psm1 | % {
-	$moduleInfo = Import-Module $_.FullName
+# Modules (instead of $env:PSModulePath)
+gci "$PSScriptRoot\PSMs" -Filter *.psm1 | % {
+	Import-Module $_.FullName
 }
 
-# env
+# [System.EnvironmentVariableTarget]::Process
 $env:GOROOT = "C:\Go\1.6.2"
 $env:GOPATH = "$HOME\Gopath"
-
-# PATH
-$private:envPath = @(
+$env:Path = @(
 	"C:\Scripts"
-	"$env:USERPROFILE\OneDrive\Scripts"
 	"$env:ProgramFiles\Oracle\VirtualBox"
 	"$env:GOPATH\bin"
 	"$env:GOROOT\bin"
 	$env:Path
-)
-$env:Path = $envPath -join ";"
+) -join ";"
 
 # Alias
 sal gh Get-Help
@@ -34,17 +31,6 @@ function Rename-Files {
 	)
 
 	gci $Path -Filter $Filter | Rename-Item -NewName {$_.Name -replace $Old, $New}
-}
-
-function Get-Path {
-	$env:Path.Split(";")
-}
-
-function Get-Env {
-	gci Env: | ? { $_.Name -NotMatch "Path" } | Format-Table -AutoSize -Wrap
-	Write-Host "Path"
-	Write-Host "----"
-	Get-Path
 }
 
 function Assert-SHA256($path, $sha256) {
