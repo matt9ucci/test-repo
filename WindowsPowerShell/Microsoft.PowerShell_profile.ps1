@@ -7,13 +7,9 @@ gci "$PSScriptRoot\PSMs" -Filter *.psm1 | % {
 }
 
 # [System.EnvironmentVariableTarget]::Process
-$env:GOROOT = "C:\Go\1.6.2"
-$env:GOPATH = "$HOME\Gopath"
 $env:Path = @(
 	"C:\Scripts"
 	"$env:ProgramFiles\Oracle\VirtualBox"
-	"$env:GOPATH\bin"
-	"$env:GOROOT\bin"
 	$env:Path
 ) -join ";"
 

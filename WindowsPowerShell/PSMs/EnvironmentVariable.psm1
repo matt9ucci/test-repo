@@ -1,23 +1,102 @@
-﻿function Get-Path {
+﻿# Default proxy settings
+$PROXY_SERVER = "my.proxy.server"
+$PROXY_PORT = "9999"
+$PROXY_USER = ""
+$PROXY_PASSWORD = ""
+
+# Default Go env
+$GOROOT = "C:\Go"
+$GOPATH = "$HOME\Gopath"
+
+function Get-Env([string]$Include = "") {
+	return gci Env: | ? { $_.Name -match $Include }
+}
+
+function Get-PathEnv {
 	Param(
-		[ValidateSet("Machine", "User", "Process")]
-		[string]$Target
+		[System.EnvironmentVariableTarget]$Target = [System.EnvironmentVariableTarget]::Process
 	)
 
-	switch ($Target) {
-		"Machine" { [System.Environment]::GetEnvironmentVariable("PATH", [System.EnvironmentVariableTarget]::Machine).Split(";") }
-		"User"    { [System.Environment]::GetEnvironmentVariable("PATH", [System.EnvironmentVariableTarget]::User).Split(";") }
-		"Process" { $env:Path.Split(";") }
-		Default   { $env:Path.Split(";") }
+	[System.Environment]::GetEnvironmentVariable("PATH", $Target).Split(";")
+}
+
+function Add-PathEnv {
+	Param(
+		[System.EnvironmentVariableTarget]$Target = [System.EnvironmentVariableTarget]::Process,
+		[string]$LiteralPath
+	)
+
+	$path = [System.Environment]::GetEnvironmentVariable("PATH", $Target).Split(";")
+	if ($path -notcontains $LiteralPath) {
+		$path = @($LiteralPath) + $path
+		[System.Environment]::SetEnvironmentVariable("PATH", ($path -join ";"), $Target)
 	}
 }
 
-function Get-Env([string]$Pattern = "") {
-	$hashtable = @{}
-	gci Env: | ? { $_.Name -ne "Path" }  | ? { $_.Name -match $Pattern } | % {
-		$hashtable.Add($_.Key, $_.Value)
+function Remove-PathEnv {
+	Param(
+		[System.EnvironmentVariableTarget]$Target = [System.EnvironmentVariableTarget]::Process,
+		[string]$LiteralPath
+	)
+
+	[System.Collections.ArrayList]$path = [System.Environment]::GetEnvironmentVariable("PATH", $Target).Split(";")
+	if ($path -contains $LiteralPath) {
+		$path.Remove($LiteralPath)
+		[System.Environment]::SetEnvironmentVariable("PATH", ($path -join ";"), $Target)
 	}
-	return $hashtable
+}
+
+function Set-HttpProxyEnv {
+	Param(
+		[System.EnvironmentVariableTarget]$Target = [System.EnvironmentVariableTarget]::Process,
+		[string]$Server = $PROXY_SERVER,
+		[string]$Port = $PROXY_PORT,
+		[string]$User = $PROXY_USER,
+		[string]$Password = $PROXY_PASSWORD
+	)
+
+	$proxy = "${Server}:${Port}"
+	if ($User -and $Password) {
+		$proxy = "${User}:${Password}@${proxy}"
+	}
+
+	[System.Environment]::SetEnvironmentVariable("http_proxy", "http://$proxy", $Target)
+	[System.Environment]::SetEnvironmentVariable("https_proxy", "https://$proxy", $Target)
+}
+
+function Remove-HttpProxyEnv {
+	Param(
+		[System.EnvironmentVariableTarget]$Target = [System.EnvironmentVariableTarget]::Process
+	)
+
+	[System.Environment]::SetEnvironmentVariable("http_proxy", $null, $Target)
+	[System.Environment]::SetEnvironmentVariable("https_proxy", $null, $Target)
+}
+
+function Set-GoEnv {
+	Param(
+		[System.EnvironmentVariableTarget]$Target = [System.EnvironmentVariableTarget]::Process,
+		[string]$GoRoot = $GOROOT,
+		[string]$GoPath = $GOPATH
+	)
+
+	[System.Environment]::SetEnvironmentVariable("GOROOT", $GoRoot, $Target)
+	[System.Environment]::SetEnvironmentVariable("GOPATH", $GoPath, $Target)
+
+	Add-PathEnv -Target $Target -LiteralPath (Join-Path $GoRoot "bin")
+	Add-PathEnv -Target $Target -LiteralPath (Join-Path $GoPath "bin")
+}
+
+function Remove-GoEnv {
+	Param(
+		[System.EnvironmentVariableTarget]$Target = [System.EnvironmentVariableTarget]::Process
+	)
+
+	Remove-PathEnv -Target $Target -LiteralPath (Join-Path ([System.Environment]::GetEnvironmentVariable("GOROOT", $Target)) "bin")
+	Remove-PathEnv -Target $Target -LiteralPath (Join-Path ([System.Environment]::GetEnvironmentVariable("GOPATH", $Target)) "bin")
+
+	[System.Environment]::SetEnvironmentVariable("GOROOT", $null, $Target)
+	[System.Environment]::SetEnvironmentVariable("GOPATH", $null, $Target)
 }
 
 Export-ModuleMember -Function "*"
