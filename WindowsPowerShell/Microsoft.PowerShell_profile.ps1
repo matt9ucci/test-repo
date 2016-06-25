@@ -17,6 +17,13 @@ $env:Path = @(
 sal gh Get-Help
 sal vbm VBoxManage
 
+# Special Folders
+Set-Variable DOWNLOADS "$HOME\Downloads" -Option Constant
+Set-Variable DOCUMENTS ([System.Environment]::GetFolderPath([System.Environment+SpecialFolder]::MyDocuments)) -Option Constant
+Set-Variable MUSIC     ([System.Environment]::GetFolderPath([System.Environment+SpecialFolder]::MyMusic))     -Option Constant
+Set-Variable PICTURES  ([System.Environment]::GetFolderPath([System.Environment+SpecialFolder]::MyPictures))  -Option Constant
+Set-Variable VIDEOS    ([System.Environment]::GetFolderPath([System.Environment+SpecialFolder]::MyVideos))    -Option Constant
+
 function Rename-Files {
 	[CmdletBinding(SupportsShouldProcess = $true)]
 	Param(
