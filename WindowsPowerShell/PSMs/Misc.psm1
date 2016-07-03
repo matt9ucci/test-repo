@@ -1,28 +1,23 @@
-function Get-WebResource {
+
+function Rename-Items {
+	[CmdletBinding(SupportsShouldProcess = $true)]
 	Param(
-		$Uri,
-		$OutDir = "$HOME\Downloads",
-		$OutName = (Split-Path $Uri -Leaf)
+		[string]$Path = ".",
+		[string]$Filter = "*",
+		[string]$Old,
+		[string]$New
 	)
 
-	if (!(Test-Path $OutDir)) {
-		Write-Host "$OutDir does not exist."
-		$OutDir = Split-Path $PSCommandPath -Parent
-	}
+	gci $Path -Filter $Filter | Rename-Item -NewName {$_.Name -replace $Old, $New}
+}
 
-	$outFile = Join-Path $OutDir $OutName
-	if (Test-Path $outFile -IsValid) {
-		Invoke-WebRequest -Uri $Uri -OutFile $outFile
-	} else {
-		throw "$outFile is invalid path."
-	}
-
-	$result = New-Object PSObject -Property @{
-		Uri = $uri
-		Path = $outFile
-		SHA256 = (Get-FileHash $outFile -Algorithm SHA256).hash
+function Assert-SHA256($path, $sha256) {
+	$fileHash = (Get-FileHash $path -Algorithm SHA256).hash
+	$result = $sha256 -eq $fileHash
+	if (!$result) {
+		Write-Host "The file is corrupt: $path" -ForegroundColor Red
+		Write-Host "FileHash: $fileHash" -ForegroundColor Red
+		Write-Host "Checksum: $sha256" -ForegroundColor Red
 	}
 	return $result
 }
-
-Export-ModuleMember -Function "*"

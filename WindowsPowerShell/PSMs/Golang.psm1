@@ -51,31 +51,11 @@ function New-Gopath {
 	ni -Force -ItemType Directory -Path (Join-Path $env:GOPATH src)
 }
 
-function Get-GoDistribution {
-	Param(
-		[string]$Version = $VERSION,
-		[string]$Os = "windows",
-		[string]$Cpu = "amd64",
-		[string]$Extension = "zip",
-		[string]$Destination = $GOROOTROOT
-	)
-
-	$uri = "https://storage.googleapis.com/golang/go$Version.$Os-$Cpu.$Extension"
-	$outFile = Join-Path $Destination (Split-Path $uri -Leaf)
-
-	if (Test-Path $outFile) {
-		Write-Host "$outFile already exists."
-	} else {
-		Invoke-WebRequest -Uri $uri -OutFile $outFile
+function Get-GoDistributionSHA256Checksum($Version = "1.6.2") {
+	(Invoke-WebRequest "https://golang.org/dl/").ParsedHtml.getElementById("go$Version").getElementsByTagName("tr") | ? { $_.className -ne "first" } | % {
+		$_.getElementsByClassName("download")[0].innerText
+		$_.getElementsByTagName("tt")[0].innerText
 	}
-
-	$result = New-Object PSObject -Property @{
-		Uri = $uri
-		Path = $outFile
-		SHA256 = (Get-FileHash $outFile -Algorithm SHA256).hash
-	}
-
-	return $result
 }
 
 Export-ModuleMember -Function "*"

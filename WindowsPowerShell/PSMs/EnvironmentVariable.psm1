@@ -4,10 +4,6 @@ $PROXY_PORT = "9999"
 $PROXY_USER = ""
 $PROXY_PASSWORD = ""
 
-function Get-Env([string]$Include = "") {
-	return gci Env: | ? { $_.Name -match $Include }
-}
-
 function Get-PathEnv {
 	Param(
 		[System.EnvironmentVariableTarget]$Target = [System.EnvironmentVariableTarget]::Process
