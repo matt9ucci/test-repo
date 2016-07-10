@@ -32,4 +32,15 @@ function Restore-Snapshot($VmName, $SnapshotName) {
 	$session.UnlockMachine()
 }
 
+	New-Item $folder -Force -ItemType Directory
+	(New-VBox).SystemProperties.DefaultMachineFolder = $folder
+}
+
+	$vbox = New-VBox
+	# Turn off "Check for Updates"
+	$vbox.SetExtraData("GUI/UpdateDate", "never")
+	# Host Key = Left Windows key
+	$vbox.SetExtraData("GUI/Input/HostKeyCombination", [string]91)
+}
+
 Export-ModuleMember -Function "*"
