@@ -9,10 +9,10 @@ gci "$PSScriptRoot\PSMs" -Filter *.psm1 | % {
 function Edit-Profile { ise $PROFILE }
 function Import-Profile { . $PROFILE }
 
-function Set-Constant([string]$Name, $Value) { sv $Name $Value -Option Constant -Scope Global }
+function Set-Constant($Name, $Value) { sv $Name $Value -Option Constant -Scope Global }
 function ConvertTo-ArrayList([array]$Array) { New-Object System.Collections.ArrayList @(,$Array) }
-function Get-Env([string]$Include = "") { gci Env: | ? { $_.Name -match $Include } }
-function New-Directory([string[]]$Path) { ni -Force -ItemType Directory -Path $Path }
+function Get-Env($Include = "") { gci Env: | ? { $_.Name -match $Include } }
+function New-Directory([string[]]$Path) { ni $Path -Force -ItemType Directory }
 
 function ConvertTo-OutFile($Uri) { Join-Path $DOWNLOADS (Split-Path $Uri -Leaf) }
 function Test-OutFile($Uri) { Test-Path (ConvertTo-OutFile $Uri) }
@@ -20,6 +20,8 @@ function Get-OutFileHash($Uri) { Get-FileHash (ConvertTo-OutFile $Uri) }
 function Save-WebResource($Uri) { (Test-OutFile $Uri) -or (iwr $Uri -OutFile (ConvertTo-OutFile $Uri)) > $null; Get-OutFileHash $Uri | fl }
 
 function Save-GoDistribution($Version = "1.6.2") { Save-WebResource "https://storage.googleapis.com/golang/go${Version}.windows-amd64.zip" }
+function Save-DockerWindowsBinary($Version = "latest") { Save-WebResource "https://get.docker.com/builds/Windows/x86_64/docker-${Version}.zip" }
+function Save-DockerSource($Version = "master") { Save-WebResource "https://github.com/docker/docker/archive/${Version}.zip" }
 
 # Alias
 sal gh Get-Help
