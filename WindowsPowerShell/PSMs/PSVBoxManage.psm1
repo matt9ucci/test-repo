@@ -32,10 +32,12 @@ function Restore-Snapshot($VmName, $SnapshotName) {
 	$session.UnlockMachine()
 }
 
+function Set-MachineFolder($Folder = "C:\Apps\VirtualBox\VMs") {
 	New-Item $folder -Force -ItemType Directory
 	(New-VBox).SystemProperties.DefaultMachineFolder = $folder
 }
 
+function Initialize-Extradata {
 	$vbox = New-VBox
 	# Turn off "Check for Updates"
 	$vbox.SetExtraData("GUI/UpdateDate", "never")
