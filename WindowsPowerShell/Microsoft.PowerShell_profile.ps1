@@ -34,6 +34,9 @@ Set-Constant MUSIC     ([System.Environment]::GetFolderPath([System.Environment+
 Set-Constant PICTURES  ([System.Environment]::GetFolderPath([System.Environment+SpecialFolder]::MyPictures))
 Set-Constant VIDEOS    ([System.Environment]::GetFolderPath([System.Environment+SpecialFolder]::MyVideos))
 
+Set-Constant FIREFOX_PROFILES "$env:APPDATA\Mozilla\Firefox\Profiles"
+Set-Constant GITHUB_REPOSITORIES "$HOME\GitHub"
+
 # [System.EnvironmentVariableTarget]::Process
 $env:Path = @(
 	"C:\Scripts"
