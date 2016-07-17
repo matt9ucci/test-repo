@@ -37,9 +37,15 @@ Set-Constant VIDEOS    ([System.Environment]::GetFolderPath([System.Environment+
 Set-Constant FIREFOX_PROFILES "$env:APPDATA\Mozilla\Firefox\Profiles"
 Set-Constant GITHUB_REPOSITORIES "$HOME\GitHub"
 
+$env:GOROOT = "C:\Go"
+$env:GOBIN = "$env:GOROOT\bin"
+$env:GOPATH = "$HOME\Gopath"
+
 # [System.EnvironmentVariableTarget]::Process
 $env:Path = @(
 	"C:\Scripts"
+	"$env:GOPATH\bin"
+	"$env:GOBIN"
 	"$env:ProgramFiles\Oracle\VirtualBox"
 	$env:Path
 ) -join ";"
