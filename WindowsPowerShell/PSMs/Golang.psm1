@@ -1,18 +1,12 @@
-$GOROOTROOT = "C:\Go"
-$VERSION = "1.6.2"
-
-# Go Env
-$GOROOT = Join-Path $GOROOTROOT $VERSION
-$GOPATH = Join-Path $HOME "Gopath"
-
 function Set-GoEnv {
 	Param(
 		[System.EnvironmentVariableTarget]$Target = [System.EnvironmentVariableTarget]::Process,
-		[string]$GoRoot = $GOROOT,
-		[string]$GoPath = $GOPATH
+		[string]$GoRoot = $env:GOROOT,
+		[string]$GoPath = $env:GOPATH
 	)
 
 	[System.Environment]::SetEnvironmentVariable("GOROOT", $GoRoot, $Target)
+	[System.Environment]::SetEnvironmentVariable("GOBIN", (Join-Path $GoRoot "bin"), $Target)
 	[System.Environment]::SetEnvironmentVariable("GOPATH", $GoPath, $Target)
 
 	Add-PathEnv -Target $Target -LiteralPath (Join-Path $GoRoot "bin")
