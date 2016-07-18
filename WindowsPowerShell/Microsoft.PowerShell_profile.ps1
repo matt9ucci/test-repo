@@ -38,11 +38,9 @@ $env:GOPATH = $GOPATH
 
 # [System.EnvironmentVariableTarget]::Process
 $env:Path = @(
-	"C:\Scripts"
+	"$HOME\Scripts"
 	"$env:GOPATH\bin"
 	"$env:GOROOT\bin"
 	"$env:ProgramFiles\Oracle\VirtualBox"
 	$env:Path
 ) -join ";"
-
-sl C:\Scripts
