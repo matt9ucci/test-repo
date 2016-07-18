@@ -6,7 +6,6 @@ function Set-GoEnv {
 	)
 
 	[System.Environment]::SetEnvironmentVariable("GOROOT", $GoRoot, $Target)
-	[System.Environment]::SetEnvironmentVariable("GOBIN", (Join-Path $GoRoot "bin"), $Target)
 	[System.Environment]::SetEnvironmentVariable("GOPATH", $GoPath, $Target)
 
 	Add-PathEnv -Target $Target -LiteralPath (Join-Path $GoRoot "bin")

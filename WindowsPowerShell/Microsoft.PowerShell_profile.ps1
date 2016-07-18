@@ -6,13 +6,8 @@ gci "$PSScriptRoot\PSMs" -Filter *.psm1 | % {
 	Import-Module $_.FullName
 }
 
-function Edit-Profile { ise $PROFILE }
-function Import-Profile { . $PROFILE }
-
 function Set-Constant($Name, $Value) { sv $Name $Value -Option Constant -Scope Global }
 function ConvertTo-ArrayList([array]$Array) { New-Object System.Collections.ArrayList @(,$Array) }
-function Get-Env($Include = "") { gci Env: | ? { $_.Name -match $Include } }
-function New-Directory([string[]]$Path) { ni $Path -Force -ItemType Directory }
 
 function ConvertTo-OutFile($Uri) { Join-Path $DOWNLOADS (Split-Path $Uri -Leaf) }
 function Test-OutFile($Uri) { Test-Path (ConvertTo-OutFile $Uri) }
@@ -24,7 +19,6 @@ function Save-DockerWindowsBinary($Version = "latest") { Save-WebResource "https
 function Save-DockerSource($Version = "master") { Save-WebResource "https://github.com/docker/docker/archive/${Version}.zip" }
 
 # Alias
-sal gh Get-Help
 sal vbm VBoxManage
 
 # Special Folders
@@ -37,26 +31,18 @@ Set-Constant VIDEOS    ([System.Environment]::GetFolderPath([System.Environment+
 Set-Constant FIREFOX_PROFILES "$env:APPDATA\Mozilla\Firefox\Profiles"
 Set-Constant GITHUB_REPOSITORIES "$HOME\GitHub"
 
-$env:GOROOT = "C:\Go"
-$env:GOBIN = "$env:GOROOT\bin"
-$env:GOPATH = "$HOME\Gopath"
+$GOROOT = "C:\Go"
+$GOPATH = "$HOME\Gopath"
+$env:GOROOT = $GOROOT
+$env:GOPATH = $GOPATH
 
 # [System.EnvironmentVariableTarget]::Process
 $env:Path = @(
 	"C:\Scripts"
 	"$env:GOPATH\bin"
-	"$env:GOBIN"
+	"$env:GOROOT\bin"
 	"$env:ProgramFiles\Oracle\VirtualBox"
 	$env:Path
 ) -join ";"
-
-
-function prompt {
-	$Host.UI.RawUI.WindowTitle = "PS $($executionContext.SessionState.Path.CurrentLocation)$('>' * ($nestedPromptLevel + 1)) "
-	return "PS> "
-	# .Link
-	# http://go.microsoft.com/fwlink/?LinkID=225750
-	# .ExternalHelp System.Management.Automation.dll-help.xml
-}
 
 sl C:\Scripts
