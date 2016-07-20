@@ -8,6 +8,9 @@ function sl.... { sl ..\..\.. }
 
 sal gh Get-Help
 
+sv DOWNLOADS $HOME\Downloads -Option ReadOnly, AllScope
+sv DOCUMENTS ([System.Environment]::GetFolderPath([System.Environment+SpecialFolder]::MyDocuments)) -Option ReadOnly, AllScope
+
 ri Alias:ls
 function ls { Get-ChildItem -Exclude .* -Name }
 function ll { Get-ChildItem -Exclude .* }

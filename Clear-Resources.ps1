@@ -1,12 +1,4 @@
-﻿function Clear-Firefox() {
-	[CmdletBinding(SupportsShouldProcess = $true)]
-	Param()
-
-	Remove-Item -Recurse $env:LOCALAPPDATA\Mozilla\Firefox
-	Remove-Item -Recurse $env:APPDATA\Mozilla\Firefox
-}
-
-function Clear-Atom() {
+﻿function Clear-Atom() {
 	[CmdletBinding(SupportsShouldProcess = $true)]
 	Param()
 
