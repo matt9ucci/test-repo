@@ -21,14 +21,6 @@ function Save-DockerSource($Version = "master") { Save-WebResource "https://gith
 # Alias
 sal vbm VBoxManage
 
-# Special Folders
-Set-Constant DOWNLOADS "$HOME\Downloads"
-Set-Constant DOCUMENTS ([System.Environment]::GetFolderPath([System.Environment+SpecialFolder]::MyDocuments))
-Set-Constant MUSIC     ([System.Environment]::GetFolderPath([System.Environment+SpecialFolder]::MyMusic))
-Set-Constant PICTURES  ([System.Environment]::GetFolderPath([System.Environment+SpecialFolder]::MyPictures))
-Set-Constant VIDEOS    ([System.Environment]::GetFolderPath([System.Environment+SpecialFolder]::MyVideos))
-
-Set-Constant FIREFOX_PROFILES "$env:APPDATA\Mozilla\Firefox\Profiles"
 Set-Constant GITHUB_REPOSITORIES "$HOME\GitHub"
 
 $GOROOT = "C:\Go"
