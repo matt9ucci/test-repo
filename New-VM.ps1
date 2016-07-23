@@ -1,4 +1,6 @@
-﻿$machinefolder = (VBoxManage list systemproperties | Select-String "Default machine folder:").ToString().Replace("Default machine folder:", "").Trim()
+﻿Import-Module "$HOME\GitHub\test-repo\WindowsPowerShell\PSMs\PSVBoxManage.psm1"
+
+$machinefolder = (VBoxManage list systemproperties | Select-String "Default machine folder:").ToString().Replace("Default machine folder:", "").Trim()
 $iso = "C:\Apps\ISO\ubuntu-15.10-server-amd64.iso"
 $vmname = "$((Get-Item $iso).BaseName)-test"
 $ostype = "Ubuntu_64"
@@ -11,7 +13,8 @@ $hd_size = 65536
 VBoxManage unregistervm $vmname --delete
 VBoxManage closemedium $hd_filename --delete
 
-VBoxManage createvm --name $vmname --ostype $ostype --register
+New-Vm $vmname $ostype
+
 VBoxManage modifyvm $vmname --memory $memorysize
 VBoxManage modifyvm $vmname --vram $vramsize
 VBoxManage modifyvm $vmname --pae off

@@ -1,14 +1,15 @@
-﻿function New-VBox {
-	New-Object -ComObject "VirtualBox.VirtualBox"
-}
+﻿$vbox = New-Object -ComObject "VirtualBox.VirtualBox"
 
 function New-Session {
 	New-Object -ComObject "VirtualBox.Session"
 }
 
 function Get-Vm($VmName) {
-	$vbox = New-VBox
 	$vbox.FindMachine($VmName)
+}
+
+function Get-GuestOsTypes($Id) {
+	$vbox.guestOSTypes() | Where { $_.Id -match $Id }
 }
 
 function Get-VmState($VmName) {
@@ -34,16 +35,22 @@ function Restore-Snapshot($VmName, $SnapshotName) {
 
 function Set-VmFolder($Folder = "C:\Apps\VirtualBox\VMs") {
 	New-Item $folder -Force -ItemType Directory
-	(New-VBox).SystemProperties.DefaultMachineFolder = $folder
+	$vbox.SystemProperties.DefaultMachineFolder = $folder
 }
 
 function Initialize-Extradata {
-	$vbox = New-VBox
 	# Turn off "Check for Updates"
 	$vbox.SetExtraData("GUI/UpdateDate", "never")
 	# Host Key = Left Windows key
 	$vbox.SetExtraData("GUI/Input/HostKeyCombination", [string]91)
 
+}
+
+function New-Vm($VmName, $OsType) {
+	$vm = $vbox.CreateMachine($null, $VmName, [String[]]'', $OsType, $null)
+	$vm.SaveSettings()
+	$vbox.registerMachine($vm)
+	return $vm
 }
 
 function Initialize-Vm($VmName) {
