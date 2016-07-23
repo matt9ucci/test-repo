@@ -1,4 +1,5 @@
-﻿$vbox = New-Object -ComObject "VirtualBox.VirtualBox"
+﻿. $PSScriptRoot\VirtualBoxSDKEnums.ps1
+$vbox = New-Object -ComObject "VirtualBox.VirtualBox"
 
 function New-Session {
 	New-Object -ComObject "VirtualBox.Session"
@@ -23,12 +24,12 @@ function Start-Vm($VmName, $Type) {
 function Restore-Snapshot($VmName, $SnapshotName) {
 	$session = New-Session
 
-	(Get-VM $VmName).LockMachine($session, 2)
+	(Get-VM $VmName).LockMachine($session, [LockType]::Write)
 
 	$machine = $session.Machine
 	$snapshot = $machine.FindSnapshot($SnapshotName)
 	$progress = $machine.RestoreSnapshot($snapshot)
-	$progress.WaitForCompletion(30000)
+	$progress.WaitForCompletion(20000)
 
 	$session.UnlockMachine()
 }
@@ -59,4 +60,4 @@ function Initialize-Vm($VmName) {
 	VBoxManage sharedfolder add $VmName --name "Shared" --hostpath "$HOME\Downloads"
 }
 
-Export-ModuleMember -Function "*"
+Export-ModuleMember -Function *
