@@ -1,6 +1,7 @@
-﻿Import-Module "$HOME\GitHub\test-repo\WindowsPowerShell\PSMs\PSVBoxManage.psm1"
+﻿Import-Module "$HOME\GitHub\test-repo\WindowsPowerShell\PSMs\VirtualBox.psm1"
+$vbox = New-Object -ComObject "VirtualBox.VirtualBox"
 
-$machinefolder = (VBoxManage list systemproperties | Select-String "Default machine folder:").ToString().Replace("Default machine folder:", "").Trim()
+$machinefolder = Get-VmFolder
 $iso = "C:\Apps\ISO\ubuntu-15.10-server-amd64.iso"
 $vmname = "$((Get-Item $iso).BaseName)-test"
 $ostype = "Ubuntu_64"

@@ -34,6 +34,10 @@ function Restore-Snapshot($VmName, $SnapshotName) {
 	$session.UnlockMachine()
 }
 
+function Get-VmFolder {
+	$vbox.SystemProperties.DefaultMachineFolder
+}
+
 function Set-VmFolder($Folder = "C:\Apps\VirtualBox\VMs") {
 	New-Item $folder -Force -ItemType Directory
 	$vbox.SystemProperties.DefaultMachineFolder = $folder
@@ -44,7 +48,6 @@ function Initialize-Extradata {
 	$vbox.SetExtraData("GUI/UpdateDate", "never")
 	# Host Key = Left Windows key
 	$vbox.SetExtraData("GUI/Input/HostKeyCombination", [string]91)
-
 }
 
 function New-Vm($VmName, $OsType) {
