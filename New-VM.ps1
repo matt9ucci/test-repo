@@ -1,25 +1,25 @@
 ﻿Import-Module "$HOME\GitHub\test-repo\WindowsPowerShell\PSMs\VirtualBox.psm1"
-$vbox = New-Object -ComObject "VirtualBox.VirtualBox"
+#$vbox = New-Object -ComObject "VirtualBox.VirtualBox"
 
-$machinefolder = Get-VmFolder
-$iso = "C:\Apps\ISO\ubuntu-15.10-server-amd64.iso"
+$iso = "C:\Apps\ISO\ubuntu-16.04-server-amd64.iso"
 $vmname = "$((Get-Item $iso).BaseName)-test"
 $ostype = "Ubuntu_64"
 $memorysize = 2048
 $vramsize = 12
-$hd_filename = "$machinefolder\$vmname\$vmname.vdi"
+$hd_filename = "$(Get-VmFolder)\$vmname\$vmname.vdi"
 $hd_size = 65536
 
 # clean up
 VBoxManage unregistervm $vmname --delete
 VBoxManage closemedium $hd_filename --delete
 
-New-Vm $vmname $ostype
+$vm = New-Vm $vmname $ostype
+$vm.MemorySize = $memorysize
+$vm.VRAMSize = $vramsize
+$vm.RTCUseUTC = 1 # on
+Register-Vm $vm
 
-VBoxManage modifyvm $vmname --memory $memorysize
-VBoxManage modifyvm $vmname --vram $vramsize
 VBoxManage modifyvm $vmname --pae off
-VBoxManage modifyvm $vmname --rtcuseutc on
 VBoxManage modifyvm $vmname --audio dsound --audiocodec ad1980
 VBoxManage modifyvm $vmname --usb on
 VBoxManage modifyvm $vmname --mouse usbtablet

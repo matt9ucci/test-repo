@@ -51,10 +51,13 @@ function Initialize-Extradata {
 }
 
 function New-Vm($VmName, $OsType) {
-	$vm = $vbox.CreateMachine($null, $VmName, [String[]]'', $OsType, $null)
-	$vm.SaveSettings()
-	$vbox.registerMachine($vm)
-	return $vm
+	$vbox.CreateMachine($null, $VmName, [String[]]'', $OsType, $null)
+}
+
+function Register-Vm($Vm) {
+	$Vm.SaveSettings()
+	$vbox.registerMachine($Vm)
+	return $Vm
 }
 
 function Initialize-Vm($VmName) {
