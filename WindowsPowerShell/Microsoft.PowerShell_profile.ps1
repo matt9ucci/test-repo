@@ -6,9 +6,6 @@ gci "$PSScriptRoot\PSMs" -Filter *.psm1 | % {
 	Import-Module $_.FullName
 }
 
-function Set-Constant($Name, $Value) { sv $Name $Value -Option Constant -Scope Global }
-function ConvertTo-ArrayList([array]$Array) { New-Object System.Collections.ArrayList @(,$Array) }
-
 function ConvertTo-OutFile($Uri) { Join-Path $DOWNLOADS (Split-Path $Uri -Leaf) }
 function Test-OutFile($Uri) { Test-Path (ConvertTo-OutFile $Uri) }
 function Get-OutFileHash($Uri) { Get-FileHash (ConvertTo-OutFile $Uri) }
@@ -21,12 +18,7 @@ function Save-DockerSource($Version = "master") { Save-WebResource "https://gith
 # Alias
 sal vbm VBoxManage
 
-Set-Constant GITHUB_REPOSITORIES "$HOME\GitHub"
-
-$GOROOT = "C:\Go"
-$GOPATH = "$HOME\Gopath"
-$env:GOROOT = $GOROOT
-$env:GOPATH = $GOPATH
+sv GITHUB_REPOSITORIES $HOME\GitHub -Option ReadOnly, AllScope
 
 # [System.EnvironmentVariableTarget]::Process
 $env:Path = @(

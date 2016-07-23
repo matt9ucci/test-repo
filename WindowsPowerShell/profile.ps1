@@ -8,8 +8,13 @@ function sl.... { sl ..\..\.. }
 
 sal gh Get-Help
 
+$env:GOROOT = "C:\Go"
+$env:GOPATH = "$HOME\Gopath"
+
 sv DOWNLOADS $HOME\Downloads -Option ReadOnly, AllScope
 sv DOCUMENTS ([System.Environment]::GetFolderPath([System.Environment+SpecialFolder]::MyDocuments)) -Option ReadOnly, AllScope
+sv GOROOT $env:GOROOT -Option ReadOnly, AllScope
+sv GOPATH $env:GOPATH -Option ReadOnly, AllScope
 
 ri Alias:ls
 function ls { Get-ChildItem -Exclude .* -Name }
